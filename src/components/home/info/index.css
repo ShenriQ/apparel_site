@@ -1,0 +1,18 @@
+.info_title {
+    font-size: 20px;
+    font-weight: bold;
+}
+
+.info_subtitle {
+    font-size: 18px;
+}
+
+.my-2 {
+    width: 180px;
+    margin-left: 20px;
+}
+
+.row {
+    margin-right: 0px !important;
+    margin-left: 0px !important;
+}

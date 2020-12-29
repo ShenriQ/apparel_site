@@ -1,0 +1,11 @@
+.footer-copyright {
+    background: linear-gradient(180deg,#454545 0,#313131) ;
+}
+
+.footer-link {
+    background-color : #ffffff !important;
+    color: #313131 !important;
+    border-color: rgba(0,0,0,.1);
+    border-top-style: solid;
+    border-top-width: 1px;
+}

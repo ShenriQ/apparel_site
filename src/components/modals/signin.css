@@ -1,0 +1,17 @@
+.MuiDialog-container {
+    height: inherit !important;
+}
+.mt-20 {
+    margin-top: 20px !important;
+}
+.minw-450 {
+    min-width: 450px !important;
+}
+.signin-btn {
+    height: 61px;
+    background-color: #1268f12c !important;
+}
+.signin-btn:hover{
+    color: white;
+    background-color: #1266f1 !important;
+}

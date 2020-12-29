@@ -1,0 +1,29 @@
+.item_img  {
+    height: 75vh;
+    object-fit: cover;
+    object-position: center;
+}
+
+.carousel-caption {
+    top: 25%;
+}
+
+@media (min-width: 1200px) {
+    .carousel_title{
+        font-size: 4.5rem !important;
+    }
+    .carousel_subtitle {
+        font-size: 2.5rem !important;
+    }
+}
+
+.carousel_title {
+    font-size: 2.5rem;
+    text-align: left;
+}
+
+.carousel_subtitle {
+    font-size: 1.5rem;
+    color : #83b735;
+    font-family: fantasy;
+}
