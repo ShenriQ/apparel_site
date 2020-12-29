@@ -1,7 +1,10 @@
 import {React, useEffect, useState} from 'react';
 import './index.css';
 import { makeStyles } from '@material-ui/core/styles';
-import {TextField, Button, FormControl, Select} from '@material-ui/core';
+import {TextField, Button, FormControl, Select, Radio, RadioGroup, FormControlLabel} from '@material-ui/core';
+import countryList from 'react-select-country-list'
+import {connect} from 'react-redux';
+import {SHOW_ALERT} from '../../../redux_helper/constants/action-types';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -16,14 +19,17 @@ const useStyles = makeStyles((theme) => ({
 }));
 
 
-const Latest = (props) => {
+const Demo1 = (props) => {
   const classes = useStyles();
+  const [countries, setCountries] = useState([])
   const [data, setData] = useState({
     category : 'Men', 
     type : 'All',
     zipcode : '',
     country : '',
-    email : ''
+    email : '',
+    sample_picture : 'yes',
+    profile_img_file : ''
   });
 
   const [err_zipcode, setErrorZip] = useState(false)
@@ -37,12 +43,40 @@ const Latest = (props) => {
     })
   };
 
+  const handleImgFileChange=(event)=>{
+      let  files = event.target.files
+
+      // FileReader support
+      if (FileReader && files && files.length) {
+          var fr = new FileReader();
+          fr.onload = function () {
+            setData({
+              ...data,
+              profile_img_file : fr.result
+            })
+          }
+          fr.readAsDataURL(files[0]);
+      }
+  }
+
   useEffect(()=>{
+    setCountries(countryList().getData())
+    setData({
+      ...data,
+      country : countryList().getData()[0].label
+    })
   }, [])
 
+  const isNumber=(string)=>{return /^\d+$/.test(string);}
+  function validateEmail(email) {
+    const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+  }
+  
   const onSubmit=() =>{
-    if(data.zipcode == '') {
+    if(data.zipcode.length <5 || data.zipcode.length > 10 || isNumber(data.zipcode) != true ) {
       setErrorZip(true)
+      props.dispatch({type : SHOW_ALERT, payload : {type : 'error', msg: 'Zip code should have 5 ~ 10 digits'}})
       return
     }
     setErrorZip(false)
@@ -51,12 +85,20 @@ const Latest = (props) => {
       return
     }
     setErrorCountry(false)
-    if(data.email == '') {
+    if(data.email.length > 45 || validateEmail(data.email) == false) {
       setErrorEmail(true)
+      props.dispatch({type : SHOW_ALERT, payload : {type : 'error', msg: 'Please enter valid email!'}})
       return
     }
     setErrorEmail(false)
-    props.showDemo(2, data.category, data.type)
+
+    if(data.sample_picture == 'no' && data.profile_img_file == '')
+    {
+      props.dispatch({type : SHOW_ALERT, payload : {type : 'error', msg: 'Please upload profile image!'}})
+      return
+    }
+
+    props.showDemo(2, data)
   }
 
 
@@ -64,9 +106,21 @@ const Latest = (props) => {
     <section className='text-center my-5'>
       
     <div className = "feature_container">
-      <h2 className='h1-responsive font-weight-bold text-center my-5'>Show Me</h2>
-      <p className='grey-text text-center w-responsive mx-auto mb-5'>
-        (Please fill out the section below)
+      <h3 className='h1-responsive font-weight-bold text-center ' style={{marginTop : 30}}>Show Me</h3>
+      <p className='font-w-500 text-center w-responsive mx-auto '>
+      You can run the “Show Me” demo in two ways:
+      </p>
+      <p className='font-w-500 text-center w-responsive mx-auto '>
+        a)	Sample:  It uses sample profile picture to view the show.
+          User needs select the “Sample profile picture” to “Y” for this scenario.
+      </p>
+      <p className='font-w-500 text-center w-responsive mx-auto '>
+        b)	User: User needs to upload his/her own profile picture to view the Show.
+          User needs to upload his/her profile picture using  “User profile picture upload” field below.
+      </p>
+      <p className='font-w-500 text-center w-responsive mx-auto '>
+          Please leave your feedback using the link below to improve user satisfaction.
+          If you like the show, please open an account. The mobile app will be available soon.
       </p>
       <div className={classes.row}>
         <div className={classes.label}>Category</div>
@@ -116,13 +170,47 @@ const Latest = (props) => {
       <div className={classes.row}>
         <div className={classes.label}>Country</div>
         <div>
-        <TextField label="country" error = {err_country} onChange={handleChange} name="country" variant="outlined" value={data.country} className={classes.formControl}/>
+          <FormControl error = {err_country} className={classes.formControl}>
+            <Select
+              error = {err_country}
+              native
+              variant="outlined"
+              value={data.country}
+              onChange={handleChange}
+              inputProps={{
+                name: 'country'
+              }}
+            >
+              {
+                countries.map((item, index)=>
+                  <option value={item.label}>{item.label}</option>
+                )
+              }
+            </Select>
+          </FormControl>
         </div>
       </div>
       <div className={classes.row}>
         <div className={classes.label}>E-mail</div>
         <div>
-        <TextField label="email" error = {err_email} onChange={handleChange} name="email" variant="outlined" value={data.email} className={classes.formControl}/>
+        <TextField placeholder="your@email.com" error = {err_email} onChange={handleChange} name="email" variant="outlined" value={data.email} className={classes.formControl}/>
+        </div>
+      </div>
+      <div className={classes.row}>
+        <div className={classes.label}>Sample Profile Picture</div>
+        <div>
+        <FormControl component="fieldset" className={classes.formControl}>
+          <RadioGroup row name="sample_picture" value={data.sample_picture} onChange={handleChange}>
+            <FormControlLabel value="yes" control={<Radio />} label="Yes" />
+            <FormControlLabel value="no" control={<Radio />} label="No" />
+          </RadioGroup>
+        </FormControl>
+        </div>
+      </div>
+      <div className={classes.row}>
+        <div className={classes.label}>Profile Picture Upload</div>
+        <div>
+              <input type="file" onChange={handleImgFileChange} disabled={data.sample_picture == 'yes' ? true : false}  className={classes.formControl}/>
         </div>
       </div>
       <div className={classes.row} style={{marginTop : 24}}>
@@ -133,4 +221,4 @@ const Latest = (props) => {
   );
 };
 
-export default Latest;
+export default connect(null)(Demo1);

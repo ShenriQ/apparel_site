@@ -15,49 +15,49 @@ const CarouselPage = () => {
     >
       <MDBCarouselInner>
         <MDBCarouselItem itemId="1">
-          <MDBView>
+          <MDBView className="carousel_item_view">
             <img
-              className="d-block w-100 item_img"
-              src="assets/imgs/home_gallery/1.jpg"
+              className="d-block item_img"
+              src="assets/imgs/demo_men/3.jpg"
               alt="First slide"
-              style = {{clipPath: 'url(#wave)'}}
+              // style = {{clipPath: 'url(#wave)'}}
             />
           {/* <MDBMask overlay="black-light" /> */}
           </MDBView>
-          <MDBCarouselCaption>
+          {/* <MDBCarouselCaption>
             <h3 className="h3-responsive carousel_title">Free Shipping</h3>
             <p className = "carousel_subtitle">Shipping is on us</p>
-          </MDBCarouselCaption>
+          </MDBCarouselCaption> */}
         </MDBCarouselItem>
         <MDBCarouselItem itemId="2">
-          <MDBView>
+          <MDBView className="carousel_item_view">
             <img
-              className="d-block w-100 item_img"
-              src="assets/imgs/home_gallery/2.jpg"
+              className="d-block item_img"
+              src="assets/imgs/demo_women/1.jpg"
               alt="Second slide"
-              style = {{clipPath: 'url(#wave)'}}
+              // style = {{clipPath: 'url(#wave)'}}
             />
           {/* <MDBMask overlay="black-strong" /> */}
           </MDBView>
-          <MDBCarouselCaption>
+          {/* <MDBCarouselCaption>
             <h3 className="h3-responsive carousel_title" >Free Support</h3>
             <p className = "carousel_subtitle">24/24 available</p>
-          </MDBCarouselCaption>
+          </MDBCarouselCaption> */}
         </MDBCarouselItem>
         <MDBCarouselItem itemId="3">
-          <MDBView>
+          <MDBView className="carousel_item_view">
             <img
-              className="d-block w-100 item_img"
-              src="assets/imgs/home_gallery/6.jpg"
+              className="d-block item_img"
+              src="assets/imgs/demo_women/3.jpg"
               alt="Third slide"
-              style = {{clipPath: 'url(#wave)'}}
+              // style = {{clipPath: 'url(#wave)'}}
             />
           {/* <MDBMask overlay="black-slight" /> */}
           </MDBView>
-          <MDBCarouselCaption>
+          {/* <MDBCarouselCaption>
             <h3 className="h3-responsive carousel_title">Best Deal</h3>
             <p className = "carousel_subtitle">Quality guaranteed</p>
-          </MDBCarouselCaption>
+          </MDBCarouselCaption> */}
         </MDBCarouselItem>
       </MDBCarouselInner>
     </MDBCarousel>

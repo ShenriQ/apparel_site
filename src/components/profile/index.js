@@ -1,12 +1,13 @@
 import {useEffect, useState, useRef} from 'react';
 import { makeStyles } from '@material-ui/core/styles';
-import {TextField, Button, FormControl, Select, Grid} from '@material-ui/core';
+import {TextField, Button, FormControl, Select, Grid, RadioGroup, FormControlLabel, Radio} from '@material-ui/core';
 import Carousel from '../apparel_carousel';
 import FeedbackDialogs from '../modals/feedback';
 import {db, auth, storage} from '../../utils/firebase';
 import {updateUserData} from '../../apis/user';
 import {SHOW_LOAD, DISMISS_LOAD, SHOW_ALERT, SET_USER} from '../../redux_helper/constants/action-types';
 import {connect} from 'react-redux';
+import countryList from 'react-select-country-list'
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -28,15 +29,19 @@ const Profile = (props) => {
   const classes = useStyles();
   const [open_modal, OpenModal] = useState(false);
   const [err_name, setErrName] = useState(false);
-  const [err_email, setErrEmail] = useState(false);
+  const [err_city, setErrCity] = useState(false);
+  const [err_zipcode, setErrZipcode] = useState(false);
   const [name, setName] = useState('');
   const [email, setEmail] = useState('');
   const [category, setCategory] = useState('Men');
   const [apparel_type, setType] = useState('All');
+  const [city, setCity] = useState('');
   const [zipcode, setZipCode] = useState('');
   const [country, setCountry] = useState('');
+  const [freeze, setFreeze] = useState('no')
   const [photo, setPhoto] = useState('');
   const img_photo = useRef(null)
+  const [countries, setCountries] = useState([])
 
   useEffect(()=>{
     console.log('auth.currentUser', auth.currentUser)
@@ -45,8 +50,12 @@ const Profile = (props) => {
     setPhoto(props.user.photo);
     setCategory(props.user.category);
     setType(props.user.apparel_type);
-    setCountry(props.user.country);
+    setCity(props.user.city)
     setZipCode(props.user.zipcode);
+    setFreeze(props.user.freeze)
+
+    setCountries(countryList().getData())
+    setCountry(props.user.country == '' ? countryList().getData()[0].label : props.user.country);
   }, [props.user])
 
   const uploadImage = () => {
@@ -87,21 +96,49 @@ const Profile = (props) => {
         }) 
     })
   }
-
+  const isNumber=(string)=>{return /^\d+$/.test(string);}
+  function validateEmail(email) {
+    const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(email);
+  }
+  
   const uploadProfile = () => {
-    if(name == ''){
+    if(name.length == 0){
       setErrName(true)
+      props.dispatch({type : SHOW_ALERT, payload : {type : 'error', msg : 'Name should not be empty!'}});
+      return
+    }
+    if(name.length > 50){
+      setErrName(true)
+      props.dispatch({type : SHOW_ALERT, payload : {type : 'error', msg : 'Name should be less than 50 characters!'}});
       return
     }
     setErrName(false)
+
+    if(city.length < 5 || city.length > 20){
+      setErrCity(true)
+      props.dispatch({type : SHOW_ALERT, payload : {type : 'error', msg : 'City Name should be in 5~20 characters!'}});
+      return
+    }
+    setErrCity(false)
+
+    if(zipcode.length <5 || zipcode.length > 10 || isNumber(zipcode) != true ) {
+      setErrZipcode(true)
+      props.dispatch({type : SHOW_ALERT, payload : {type : 'error', msg: 'Zip code should have 5 ~ 10 digits'}})
+      return
+    }
+    setErrZipcode(false)
+
     let changed_user = Object.assign({}, props.user) 
     changed_user.photo = photo
     changed_user.name = name
     changed_user.email = email
     changed_user.apparel_type = apparel_type
     changed_user.category = category
+    changed_user.city = city
     changed_user.zipcode = zipcode
     changed_user.country = country
+    changed_user.freeze = freeze
         
     props.dispatch({type : SHOW_LOAD, payload : 'Updating profile...'});
     updateUserData(changed_user).then(response => {
@@ -137,7 +174,7 @@ const Profile = (props) => {
         <div className="col-md-6 col-sm-12">
           <div style = {{display : 'flex', flexDirection : 'column', padding : 45, paddingTop : 25,}}>
           <TextField variant="outlined" label="Name" error={err_name} onChange={(e)=>setName(e.currentTarget.value)} value={name} className="mt-20"/>
-          <TextField variant="outlined" label="Email" disabled error={err_email} onChange={(e)=>setEmail(e.currentTarget.value)} value={email} className="mt-20"/>
+          <TextField variant="outlined" label="Email" disabled onChange={(e)=>setEmail(e.currentTarget.value)} value={email} className="mt-20"/>
           <div className={classes.row}>
             <div className={classes.label}>Category</div>
             <FormControl className={classes.formControl} >
@@ -173,8 +210,35 @@ const Profile = (props) => {
               </Select>
             </FormControl>
           </div>
-          <TextField variant="outlined" label="Zip Code" onChange={(e)=>setZipCode(e.currentTarget.value)} value={zipcode} className="mt-20"/>
-          <TextField variant="outlined" label="Country" onChange={(e)=>setCountry(e.currentTarget.value)} value={country} className="mt-20"/>
+          <TextField variant="outlined" error={err_city} label="City" onChange={(e)=>setCity(e.currentTarget.value)} value={city} className="mt-20"/>
+          <TextField variant="outlined" error={err_zipcode} label="Zip Code" onChange={(e)=>setZipCode(e.currentTarget.value)} value={zipcode} className="mt-20"/>
+          
+          <FormControl className="mt-20">
+            <Select
+              native
+              variant="outlined"
+              value={country}
+              onChange={(e)=>setCountry(e.currentTarget.value)}
+              inputProps={{
+                name: 'country',
+              }}
+            >
+              {
+                countries.map((item, index)=>
+                  <option value={item.label}>{item.label}</option>
+                )
+              }
+            </Select>
+          </FormControl>
+          <div className={classes.row}>
+            <div className={classes.label}>Freeze account?</div>
+            <FormControl component="fieldset" className={classes.formControl}>
+              <RadioGroup row name="freeze" value={freeze} onChange={(e)=>setFreeze(e.currentTarget.value)}>
+                <FormControlLabel value={'yes'} control={<Radio />} label="Yes" />
+                <FormControlLabel value={'no'} control={<Radio />} label="No" />
+              </RadioGroup>
+            </FormControl>
+          </div>
           </div>
         </div>
       </div>

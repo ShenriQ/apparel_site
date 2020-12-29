@@ -145,6 +145,12 @@ export default function SignInDialogs(props) {
             <Button autoFocus onClick={handleSubmit} color="primary" className="mt-20 signin-btn">
               {formType}
             </Button>
+            {
+              formType == 'Sign in' && 
+              <Button autoFocus onClick={props.openForogtModal} color="primary" style={{fontSize : 14, marginTop : 15}}>
+                Forgot password
+              </Button>
+            }
             <Button autoFocus onClick={changeForm} color="secondary" style={{fontSize : 14, marginTop : 35}}>
               {formType == 'Sign in' ? "Don't have an account yet?" : "Already have an account?"} 
             </Button>

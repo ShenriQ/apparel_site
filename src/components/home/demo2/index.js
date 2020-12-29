@@ -13,7 +13,11 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
   row :  {display: 'flex', justifyContent : 'center', alignItems : 'center'},
-  label : {width : 200, textAlign : 'left'}
+  label : {width : 200, textAlign : 'left'},
+  photo : {
+    width : 80, height : 80, borderRadius : 40,
+    boxShadow: '0 0 25px rgba(140,152,164,.6)!important'
+  },
 }));
 
 const demo_men = [
@@ -50,12 +54,12 @@ const Latest = (props) => {
       <div className="row" style={{width : '100%'}}>
         <div className="col-md-2 col-sm-12">
           <div>
-            <img src="/assets/imgs/avatars/user.png" width={36} height={36}/>
+            <img src={props.data.profile_img_file == '' ? "/assets/imgs/avatars/user.png" : props.data.profile_img_file} className={classes.photo}/>
           </div>
           <div style={{marginTop : 24}}>
             <div style={{textDecorationLine : 'underline', fontWeight : '500', fontSize : 18}}>Apparel Info</div>
-            <div style={{fontWeight : '400', fontSize : 14}}><b>Category :  </b> {props.category}</div>
-            <div style={{ fontWeight : '400', fontSize : 14}}><b>Type : </b> {props.type}</div>
+            <div style={{fontWeight : '400', fontSize : 14}}><b>Category :  </b> {props.data.category}</div>
+            <div style={{ fontWeight : '400', fontSize : 14}}><b>Type : </b> {props.data.type}</div>
           </div>
         </div>
         <div className="col-md-10 col-sm-12">

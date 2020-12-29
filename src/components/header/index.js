@@ -6,6 +6,7 @@ import {connect} from 'react-redux';
 // custom import
 import './index.css';
 import SignInDialog from '../modals/signin';
+import ForgotPasswordDialog from '../modals/forgotpasswordModal';
 import { GET_USER, API_LOGIN, API_REGISTER} from '../../redux_helper/constants/action-types';
 import ProfileMenu from './ProfileMenu';
 import MobileMenu from './MobileMenu';
@@ -54,7 +55,7 @@ const useStyles = makeStyles((theme) => ({
 const Header = (props) => {
 
   const classes = useStyles();
-
+  const [open_Forgotmodal, OpenForgotModal] = React.useState(false);
   const [open_signmodal, OpenSignModal] = React.useState(false)
   const [errmsg, setErrorMsg] = React.useState('')
 
@@ -123,7 +124,8 @@ const Header = (props) => {
           </div>
         </Toolbar>
       </AppBar>
-      <SignInDialog open={open_signmodal} errmsg = {errmsg} onClose = {()=>OpenSignModal(false)} onLogin={onLogin} onRegister={onRegister}/>
+      <ForgotPasswordDialog open={open_Forgotmodal}  onClose = {()=>OpenForgotModal(false)}  />
+      <SignInDialog open={open_signmodal} errmsg = {errmsg} openForogtModal={()=>{OpenForgotModal(true); OpenSignModal(false);}} onClose = {()=>OpenSignModal(false)} onLogin={onLogin} onRegister={onRegister}/>
     </div>
   );
 }

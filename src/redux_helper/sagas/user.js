@@ -32,7 +32,7 @@ function* workerSaga(action) {
       yield put({type : SHOW_LOAD, payload : 'Loading...'});
       let user = {
         id : register_res.user.uid, email : action.payload.user.email, name : action.payload.user.name, 
-        photo : action.payload.user.photo, zipcode : '', country : '', apparel_type : 'All', category : 'Men'}
+        photo : action.payload.user.photo, zipcode : '', country : '', city : '', freeze : 'no', apparel_type : 'All', category : 'Men'}
       const profile_res = yield call(setUserData, user);
       console.log(profile_res)
       yield put({type : SET_USER, payload : user});

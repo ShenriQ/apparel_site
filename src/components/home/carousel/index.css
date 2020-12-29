@@ -1,5 +1,6 @@
 .item_img  {
-    height: 75vh;
+    height: 400px;
+    width: 400px;
     object-fit: cover;
     object-position: center;
 }
@@ -26,4 +27,10 @@
     font-size: 1.5rem;
     color : #83b735;
     font-family: fantasy;
+}
+
+.carousel_item_view {
+    justify-content: center;
+    align-items: center;
+    display: flex;
 }

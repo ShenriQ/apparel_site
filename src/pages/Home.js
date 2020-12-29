@@ -8,12 +8,10 @@ import Footer from '../components/footer';
 
  const Home = () => {
     const [demo_id, setDemoId] = useState(1)
-    const [category, setCategory] = useState('Men')
-    const [typeName, setType] = useState('All')
-    const showDemo=(index, cat, typeName)=>{
+    const [data, setData] = useState({})
+    const showDemo=(index, data)=>{
         setDemoId(index)
-        setCategory(cat)
-        setType(typeName)
+        setData(data)
     }
     return (
         <React.Fragment>
@@ -21,7 +19,7 @@ import Footer from '../components/footer';
             <Carousel />
             <Info />
             {
-                demo_id == 1 ? <Demo1 showDemo={showDemo}/> : <Demo2 showDemo={showDemo} category = {category} type = {typeName}/>
+                demo_id == 1 ? <Demo1 showDemo={showDemo}/> : <Demo2 showDemo={showDemo} data = {data} />
             }
             <Footer />
         </React.Fragment>

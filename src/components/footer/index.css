@@ -9,3 +9,8 @@
     border-top-style: solid;
     border-top-width: 1px;
 }
+
+.align-center {
+    display: flex;
+    justify-content: center;
+}

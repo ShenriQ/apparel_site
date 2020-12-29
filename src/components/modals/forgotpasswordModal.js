@@ -5,12 +5,16 @@ import Dialog from '@material-ui/core/Dialog';
 import MuiDialogTitle from '@material-ui/core/DialogTitle';
 import MuiDialogContent from '@material-ui/core/DialogContent';
 import MuiDialogActions from '@material-ui/core/DialogActions';
+import InputAdornment from '@material-ui/core/InputAdornment';
 import IconButton from '@material-ui/core/IconButton';
 import CloseIcon from '@material-ui/icons/Close';
 import Typography from '@material-ui/core/Typography';
 import TextField from '@material-ui/core/TextField';
 import './signin.css';
 import { Divider, ButtonBase } from '@material-ui/core';
+import {auth} from '../../utils/firebase';
+import {SHOW_ALERT} from '../../redux_helper/constants/action-types';
+import {connect} from 'react-redux';
 
 const styles = (theme) => ({
   root: {
@@ -56,44 +60,45 @@ const DialogActions = withStyles((theme) => ({
   },
 }))(MuiDialogActions);
 
-export default function FeedbackDialogs(props) {
-  const {onAdd, onClose, ...rest} = props;
-  const [loading, setLoading] = React.useState(false);
+function ForgotDialogs(props) {
+  const {onClose, ...rest} = props;
   const [open, setOpen] = React.useState(false);
-  const [feedback, setFeedback] = React.useState('');
-  const [err_feedback, setErrFeedback] = React.useState(false);
+  const [email, setEmail] = React.useState('');
+  const [err_email, setErrEmail] = React.useState(false);
   const [errmsg, setErrMsg] = React.useState('');
 
   React.useEffect(() => {
     setOpen(props.open)
-    setFeedback('')
+    setEmail('')
   }, [props.open])
   
   const handleClose = () => {
-    if (loading) return;
     onClose();
   };
 
-  const countWords=(string)=>{
-    let arr = string.split(' ')
-    return arr.length
+  function validateEmail(_email) {
+    const re = /^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+    return re.test(_email);
   }
+
   const handleSubmit=()=>{
-    if(feedback.length == '' )
+    if(validateEmail(email) == false)
     {
-      setErrMsg('Feedback can not be empty!')
-      setErrFeedback(true)
-      return
-    }
-    if(countWords(feedback) > 150)
-    {
-      setErrMsg('Feedback can not exceed 150 words!')
-      setErrFeedback(true)
+      setErrMsg('Please enter valid email!')
+      setErrEmail(true)
       return
     }
     setErrMsg('')
-    setErrFeedback(false)
-    onAdd(feedback)
+    setErrEmail(false)
+    auth.sendPasswordResetEmail(email).then(response => {
+      props.dispatch({type : SHOW_ALERT, payload: {type : 'success', msg : 'Password reset email was sent!'}})
+      onClose();
+    })
+    .catch(error=> {
+      props.dispatch({type : SHOW_ALERT, payload: {type : 'error', msg : 'Error occured!'}})
+      console.log(error)
+    })
+   
   }
 
   return (
@@ -103,14 +108,20 @@ export default function FeedbackDialogs(props) {
         </DialogTitle>
         <DialogContent >
         <form noValidate autoComplete="off">
-          <h4 style={{textAlign : 'center'}}>Leave Your Feedback</h4>
+          <h4 style={{textAlign : 'center'}}>Fogot Passowrd?</h4>
           <div style={{width : '100%', color : '#f00', textAlign : 'center', fontSize : 16}}>{errmsg}</div>
           <div className="minw-450" style = {{display : 'flex', flexDirection : 'column', padding : 45, paddingTop : 25,}}>
-            <TextField variant="outlined" label="Feedback" error = {err_feedback} className="mt-20" value ={feedback} onChange={(e)=>setFeedback(e.currentTarget.value)}
-              multiline={true} rowsMax = {20} rows = {10}
+            <TextField  variant="outlined" label="Feedback" error = {err_email} className="mt-20" value ={email} onChange={(e)=>setEmail(e.currentTarget.value)}
+              InputProps={{
+                startAdornment: (
+                  <InputAdornment position="start">
+                    <ion-icon name="mail-outline"></ion-icon>
+                  </InputAdornment>
+                ),
+              }}
             />
             <Button autoFocus onClick={handleSubmit} color="primary" className="mt-20 signin-btn">
-              Submit
+              Send email
             </Button>
           </div>
         </form>
@@ -119,3 +130,5 @@ export default function FeedbackDialogs(props) {
     </div>
   );
 }
+
+export default connect(null)(ForgotDialogs)

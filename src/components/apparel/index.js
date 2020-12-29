@@ -33,6 +33,10 @@ const Apparel = (props) => {
   useEffect(()=>{
     console.log('auth.currentUser', auth.currentUser)
     getApparels()
+    if(props.user.photo == '')
+    {
+      props.dispatch({type : SHOW_ALERT, payload : {type : 'warning', msg : 'Please upload your profile picture!'}});
+    }
   }, [props.user])
 
   
@@ -102,22 +106,31 @@ const Apparel = (props) => {
             </Button>
           </div>
         </div>
-        <div className="col-md-10 col-sm-12">
-          {
-            apparels.length == 0 ?
+        {
+          props.user.freeze == 'yes'? 
+          <div className="col-md-10 col-sm-12">
             <div style={{marginTop : 20, marginBottom : 40}}>
-              <img src={"/assets/imgs/empty.png"} style={{width : 240, height : 240}}/>
-              <div style={{fontSize : 16, fontWeight : '600', color : '#777'}}>You don't have apparels yet!</div>
+              <div style={{fontSize : 16, fontWeight : '600', color : '#777'}}>Your account was freezed!</div>
             </div>
-            :
-            <Carousel products = {apparels}/>
-          }
-          <div className={classes.row} style={{marginTop : 24}}>
-            <Button onClick={()=>OpenModal(true)} variant="outlined" color="secondary" style={{borderRadius : 24, }}>
-              Please provide your feedback
-            </Button>
           </div>
-        </div>
+          :
+          <div className="col-md-10 col-sm-12">
+            {
+              apparels.length == 0 ?
+              <div style={{marginTop : 20, marginBottom : 40}}>
+                <img src={"/assets/imgs/empty.png"} style={{width : 240, height : 240}}/>
+                <div style={{fontSize : 16, fontWeight : '600', color : '#777'}}>You don't have apparels yet!</div>
+              </div>
+              :
+              <Carousel products = {apparels}/>
+            }
+            <div className={classes.row} style={{marginTop : 24}}>
+              <Button onClick={()=>OpenModal(true)} variant="outlined" color="secondary" style={{borderRadius : 24, }}>
+                Please provide your feedback
+              </Button>
+            </div>
+          </div>
+        }
       </div>
     </div>
     <FeedbackDialogs open={open_modal} onClose = {()=>OpenModal(false)} onAdd={onAddFeedback}/>
