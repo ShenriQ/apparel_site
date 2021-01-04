@@ -49,10 +49,10 @@ const FooterPage = (props) => {
             <h5 className="title">Explore</h5>
             <ul style = {{paddingLeft : 0}}>
               <li className="list-unstyled">
-                <a href="#!" style = {{color : '#000'}}>Home</a>
+                <a href="/" style = {{color : '#000'}}>Home</a>
               </li>
               <li className="list-unstyled">
-                <a href="#!" style = {{color : '#000'}}>About</a>
+                <a href="/" style = {{color : '#000'}}>About</a>
               </li>
             </ul>
           </MDBCol>

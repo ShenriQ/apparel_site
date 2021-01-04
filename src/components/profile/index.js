@@ -3,7 +3,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import {TextField, Button, FormControl, Select, Grid, RadioGroup, FormControlLabel, Radio} from '@material-ui/core';
 import Carousel from '../apparel_carousel';
 import FeedbackDialogs from '../modals/feedback';
-import {db, auth, storage} from '../../utils/firebase';
+import {db, auth, storage, serverTime} from '../../utils/firebase';
 import {updateUserData} from '../../apis/user';
 import {SHOW_LOAD, DISMISS_LOAD, SHOW_ALERT, SET_USER} from '../../redux_helper/constants/action-types';
 import {connect} from 'react-redux';
@@ -18,7 +18,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
   photo : {
-    width : 240, height : 240, borderRadius : 120,
+    width : 150, height : 150, borderRadius : 75,
     boxShadow: '0 0 25px rgba(140,152,164,.6)!important'
   },
   row :  {display: 'flex', justifyContent : 'center', alignItems : 'center'},
@@ -66,35 +66,43 @@ const Profile = (props) => {
   const handleImageChange = (e) => {
     const image = e.target.files[0]
     if(image == null) return
-    console.log(image)
-
-    let file_ref = props.user.id + '/profile.jpg';
-    props.dispatch({type : SHOW_LOAD, payload : 'Uploading...'});
-    storage.ref(file_ref).put(image).on('state_changed', 
-      (snapShot) => {
-        //takes a snap shot of the process as it is happening
-        console.log(snapShot)
-      }, 
-      (err) => {
-        //catches the errors
-        console.log(err)
-        props.dispatch({type : DISMISS_LOAD, payload : ''});
-        props.dispatch({type : SHOW_ALERT, payload : {type : 'error', msg : 'Photo Uploading Error!'}});
-      }, 
-      () => {
-        // .child('a.jpg')
-        storage.ref(file_ref).getDownloadURL()
-        .then(fireBaseUrl => {
-          setPhoto(fireBaseUrl);
-
+    if(image.size > 2097152){
+      props.dispatch({type : SHOW_ALERT, payload : {type : 'error', msg : 'Upload only 2MB size below images'}});
+      return
+    }
+    if(image.name.split(".").length > 1 && (image.name.split(".")[1]== "png" || image.name.split(".")[1]== "jpeg" || image.name.split(".")[1]== "jpg"))
+    {
+      let file_ref = props.user.id + '/profile.jpg';
+      props.dispatch({type : SHOW_LOAD, payload : 'Uploading...'});
+      storage.ref(file_ref).put(image).on('state_changed', 
+        (snapShot) => {
+          //takes a snap shot of the process as it is happening
+          console.log(snapShot)
+        }, 
+        (err) => {
+          //catches the errors
+          console.log(err)
           props.dispatch({type : DISMISS_LOAD, payload : ''});
-          // props.dispatch({type : SHOW_ALERT, payload : {type : 'success', msg : 'Profile Photo is updated successfully!'}});
-        })
-        .catch(err => {
-          props.dispatch({type : DISMISS_LOAD, payload : ''});
-          props.dispatch({type : SHOW_ALERT, payload : {type : 'error', msg : 'Photo Url Getting Error!'}});
-        }) 
-    })
+          props.dispatch({type : SHOW_ALERT, payload : {type : 'error', msg : 'Photo Uploading Error!'}});
+        }, 
+        () => {
+          // .child('a.jpg')
+          storage.ref(file_ref).getDownloadURL()
+          .then(fireBaseUrl => {
+            setPhoto(fireBaseUrl);
+
+            props.dispatch({type : DISMISS_LOAD, payload : ''});
+            // props.dispatch({type : SHOW_ALERT, payload : {type : 'success', msg : 'Profile Photo is updated successfully!'}});
+          })
+          .catch(err => {
+            props.dispatch({type : DISMISS_LOAD, payload : ''});
+            props.dispatch({type : SHOW_ALERT, payload : {type : 'error', msg : 'Photo Url Getting Error!'}});
+          }) 
+      })
+    }
+    else {
+      props.dispatch({type : SHOW_ALERT, payload : {type : 'error', msg : 'Upload only .png or .jpg or .jpeg files'}});
+    }
   }
   const isNumber=(string)=>{return /^\d+$/.test(string);}
   function validateEmail(email) {
@@ -129,16 +137,19 @@ const Profile = (props) => {
     }
     setErrZipcode(false)
 
-    let changed_user = Object.assign({}, props.user) 
-    changed_user.photo = photo
-    changed_user.name = name
-    changed_user.email = email
-    changed_user.apparel_type = apparel_type
-    changed_user.category = category
-    changed_user.city = city
-    changed_user.zipcode = zipcode
-    changed_user.country = country
-    changed_user.freeze = freeze
+    let changed_user = {
+      id : props.user.id,
+      photo : photo,
+      name : name,
+      email : email,
+      apparel_type : apparel_type,
+      category : category,
+      city : city,
+      zipcode : zipcode,
+      country : country,
+      freeze : freeze,
+      createdAt : serverTime
+    }
         
     props.dispatch({type : SHOW_LOAD, payload : 'Updating profile...'});
     updateUserData(changed_user).then(response => {
@@ -148,6 +159,7 @@ const Profile = (props) => {
       props.dispatch({type : SET_USER, payload : changed_user});
     })
     .catch(err => {
+      console.log(err)
       props.dispatch({type : DISMISS_LOAD, payload : ''});
       props.dispatch({type : SHOW_ALERT, payload : {type : 'error', msg : 'Updating Profile Error!'}});
     })
@@ -210,8 +222,8 @@ const Profile = (props) => {
               </Select>
             </FormControl>
           </div>
-          <TextField variant="outlined" error={err_city} label="City" onChange={(e)=>setCity(e.currentTarget.value)} value={city} className="mt-20"/>
-          <TextField variant="outlined" error={err_zipcode} label="Zip Code" onChange={(e)=>setZipCode(e.currentTarget.value)} value={zipcode} className="mt-20"/>
+          <TextField variant="outlined" placeholder="should be in 5 ~ 20 characters" error={err_city} label="City" onChange={(e)=>setCity(e.currentTarget.value)} value={city} className="mt-20"/>
+          <TextField variant="outlined" placeholder="Enter 5 ~ 10 digits" error={err_zipcode} label="Zip Code" onChange={(e)=>setZipCode(e.currentTarget.value)} value={zipcode} className="mt-20"/>
           
           <FormControl className="mt-20">
             <Select

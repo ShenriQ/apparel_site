@@ -25,3 +25,7 @@ export const updateUserData = (user) => {
     // })
     return db.collection('users').doc(user.id).update(user).then(response => {return response})
 }
+
+export const getAllUsers = () => {
+    return db.collection('users').orderBy('createdAt', 'desc').get().then(response => { return response; })
+}

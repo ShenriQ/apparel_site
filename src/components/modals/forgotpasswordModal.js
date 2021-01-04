@@ -111,7 +111,7 @@ function ForgotDialogs(props) {
           <h4 style={{textAlign : 'center'}}>Fogot Passowrd?</h4>
           <div style={{width : '100%', color : '#f00', textAlign : 'center', fontSize : 16}}>{errmsg}</div>
           <div className="minw-450" style = {{display : 'flex', flexDirection : 'column', padding : 45, paddingTop : 25,}}>
-            <TextField  variant="outlined" label="Feedback" error = {err_email} className="mt-20" value ={email} onChange={(e)=>setEmail(e.currentTarget.value)}
+            <TextField  variant="outlined" label="Email" placeholder="your@email.com" error = {err_email} className="mt-20" value ={email} onChange={(e)=>setEmail(e.currentTarget.value)}
               InputProps={{
                 startAdornment: (
                   <InputAdornment position="start">

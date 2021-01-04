@@ -15,7 +15,7 @@ const useStyles = makeStyles((theme) => ({
     marginTop: theme.spacing(2),
   },
   row :  {display: 'flex', justifyContent : 'center', alignItems : 'center'},
-  label : {width : 200, textAlign : 'left'}
+  label : {width : 200, textAlign : 'left', fontSize : 18}
 }));
 
 
@@ -45,9 +45,20 @@ const Demo1 = (props) => {
 
   const handleImgFileChange=(event)=>{
       let  files = event.target.files
-
+      
       // FileReader support
       if (FileReader && files && files.length) {
+
+        if(files[0].size > 2097152){
+          props.dispatch({type : SHOW_ALERT, payload : {type : 'error', msg : 'Upload only 2MB size below images'}});
+          setData({
+            ...data,
+            profile_img_file : ''
+          })
+          return
+        }
+        if(files[0].name.split(".").length > 1 && (files[0].name.split(".")[1]== "png" || files[0].name.split(".")[1]== "jpeg" || files[0].name.split(".")[1]== "jpg"))
+        {
           var fr = new FileReader();
           fr.onload = function () {
             setData({
@@ -56,6 +67,14 @@ const Demo1 = (props) => {
             })
           }
           fr.readAsDataURL(files[0]);
+        }
+        else{
+          props.dispatch({type : SHOW_ALERT, payload : {type : 'error', msg : 'Upload only .png or .jpg or .jpeg files'}});
+          setData({
+            ...data,
+            profile_img_file : ''
+          })
+        }
       }
   }
 
@@ -106,19 +125,19 @@ const Demo1 = (props) => {
     <section className='text-center my-5'>
       
     <div className = "feature_container">
-      <h3 className='h1-responsive font-weight-bold text-center ' style={{marginTop : 30}}>Show Me</h3>
-      <p className='font-w-500 text-center w-responsive mx-auto '>
+      <h3 className='font_36_txt font-weight-bold text-center ' style={{marginTop : 30}}>Show Me</h3>
+      <p className='font_22_txt fw_400 text-center w-responsive mx-auto '>
       You can run the “Show Me” demo in two ways:
       </p>
-      <p className='font-w-500 text-center w-responsive mx-auto '>
+      <p className='font_22_txt fw_400 text-center w-responsive mx-auto '>
         a)	Sample:  It uses sample profile picture to view the show.
           User needs select the “Sample profile picture” to “Y” for this scenario.
       </p>
-      <p className='font-w-500 text-center w-responsive mx-auto '>
+      <p className='font_22_txt fw_400 text-center w-responsive mx-auto '>
         b)	User: User needs to upload his/her own profile picture to view the Show.
           User needs to upload his/her profile picture using  “User profile picture upload” field below.
       </p>
-      <p className='font-w-500 text-center w-responsive mx-auto '>
+      <p className='font_22_txt fw_400 text-center w-responsive mx-auto '>
           Please leave your feedback using the link below to improve user satisfaction.
           If you like the show, please open an account. The mobile app will be available soon.
       </p>
@@ -164,7 +183,7 @@ const Demo1 = (props) => {
       <div className={classes.row}>
         <div className={classes.label}>Zip code</div>
         <div>
-        <TextField label="zip code" error = {err_zipcode} onChange={handleChange} name="zipcode" variant="outlined" value={data.zipcode}  className={classes.formControl}/>
+        <TextField label="zip code" placeholder="enter 5 ~ 10 digits" error = {err_zipcode} onChange={handleChange} name="zipcode" variant="outlined" value={data.zipcode}  className={classes.formControl}/>
         </div>
       </div>
       <div className={classes.row}>

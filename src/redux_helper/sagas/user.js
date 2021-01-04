@@ -2,6 +2,7 @@ import { takeEvery,takeLatest, call, put, actionChannel } from "redux-saga/effec
 import {API_LOGIN, API_REGISTER, SET_USER, SHOW_LOAD, DISMISS_LOAD, SHOW_ALERT, API_ADDUSER, API_GETUSER,} from '../constants/action-types';
 import {firebaseLogin, firebaseRegister, getUserData, setUserData} from '../../apis/user';
 import _localstorage from '../../utils/localstorage';
+import {serverTime} from '../../utils/firebase';
 
 export default function* watcherSaga() {
   yield takeEvery([API_LOGIN, API_REGISTER, API_ADDUSER, API_GETUSER], workerSaga);
@@ -31,8 +32,18 @@ function* workerSaga(action) {
       action.payload.callback('success')
       yield put({type : SHOW_LOAD, payload : 'Loading...'});
       let user = {
-        id : register_res.user.uid, email : action.payload.user.email, name : action.payload.user.name, 
-        photo : action.payload.user.photo, zipcode : '', country : '', city : '', freeze : 'no', apparel_type : 'All', category : 'Men'}
+        id : register_res.user.uid, 
+        email : action.payload.user.email, 
+        name : action.payload.user.name, 
+        photo : action.payload.user.photo, 
+        zipcode : '', 
+        country : '', 
+        city : '', 
+        freeze : 'no', 
+        apparel_type : 'All', 
+        category : 'Men',
+        createdAt : serverTime
+      }
       const profile_res = yield call(setUserData, user);
       console.log(profile_res)
       yield put({type : SET_USER, payload : user});

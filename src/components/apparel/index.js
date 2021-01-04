@@ -79,15 +79,11 @@ const Apparel = (props) => {
     })
   }
 
-  const AddNew=()=>{
-    document.location.href = '/add_apparel';
-  }
-
   return (
     <section className='text-center my-5'>
     <div className = "feature_container">
       <div className="row" style={{width : '100%', justifyContent : 'center'}}>
-        <h2 className='h1-responsive font-weight-bold text-center my-5'>Apparel Display</h2>
+        <h2 className='font_36_txt font-weight-bold text-center my-5'>Apparel Display</h2>
       </div>
       <div className="row" style={{width : '100%'}}>
         <div className="col-md-2 col-sm-12">
@@ -99,11 +95,6 @@ const Apparel = (props) => {
             {/* <div style={{textDecorationLine : 'underline', fontWeight : '500', fontSize : 18}}>Apparel Info</div> */}
             {/* <div style={{fontWeight : '400', fontSize : 14}}><b>Category :  </b> {props.category}</div>
             <div style={{ fontWeight : '400', fontSize : 14}}><b>Type : </b> {props.type}</div> */}
-          </div>
-          <div style={{marginTop : 24, marginBottom : 24}}>
-            <Button onClick={()=>AddNew()} variant="outlined" color="secondary" style={{borderRadius : 24, }}>
-              Add new apparel
-            </Button>
           </div>
         </div>
         {
@@ -126,7 +117,7 @@ const Apparel = (props) => {
             }
             <div className={classes.row} style={{marginTop : 24}}>
               <Button onClick={()=>OpenModal(true)} variant="outlined" color="secondary" style={{borderRadius : 24, }}>
-                Please provide your feedback
+                Provide Feedback
               </Button>
             </div>
           </div>

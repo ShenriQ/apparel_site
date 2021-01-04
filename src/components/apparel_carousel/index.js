@@ -67,12 +67,16 @@ const Discount = (props) => {
                 <div style={{marginTop : 24}}>
                   <div style={{textDecorationLine : 'underline', fontWeight : '500', fontSize : 18, marginBottom : 16}}>Product Information</div>
                   <div style={{fontWeight : '400', fontSize : 14, display : 'flex', flexDirection : 'column'}}>
-                    <div style = {{ width : 100, textAlign : 'left', marginRight: 16, fontWeight : 'bold'}}>Name : </div>
-                    <div style={{wordBreak: 'break-word'}}>{products[cur_product_id].name}</div>
+                    <div style={{wordBreak: 'break-word', textAlign : 'left',}}>
+                      <span style = {{ width : 100, textAlign : 'left', marginRight: 16, fontWeight : 'bold', display : 'inline-block'}}>Name : </span>
+                      {products[cur_product_id].name}
+                    </div>
                   </div>
                   <div style={{fontWeight : '400', fontSize : 14, display : 'flex', flexDirection : 'column'}}>
-                    <div style = {{width : 100,textAlign : 'left', marginRight: 16, fontWeight : 'bold'}}>Description : </div>
-                    <div style={{wordBreak: 'break-word'}}>{products[cur_product_id].description}</div>
+                    <div style={{wordBreak: 'break-word', textAlign : 'left',}}>
+                      <span style = {{ width : 100, textAlign : 'left', marginRight: 16, fontWeight : 'bold', display : 'inline-block'}}>Description : </span>
+                      {products[cur_product_id].description}
+                    </div>
                   </div>
                 </div>
               </div>
