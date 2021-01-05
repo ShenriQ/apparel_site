@@ -50,7 +50,7 @@ function Users(props) {
         })
       })
 
-      setUsers(tmp_users.filter(item=> item.email != "admin@user.com"));
+      setUsers(tmp_users.filter(item=> item.email != "madhubobba2@gmail.com"));
       props.dispatch({type : DISMISS_LOAD, payload : ''});
     })
     .catch(err => {

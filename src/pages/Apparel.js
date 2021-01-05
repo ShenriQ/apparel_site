@@ -8,7 +8,7 @@ import {connect} from 'react-redux';
 const Apparel =(props)=> {
     const [page, SetPageIndex] = useState(0)
     useEffect(()=>{
-        if(props.user.email == "admin@user.com")
+        if(props.user.email == "madhubobba2@gmail.com")
         {
             SetPageIndex(1)
         }

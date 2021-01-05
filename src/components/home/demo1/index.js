@@ -130,16 +130,14 @@ const Demo1 = (props) => {
       You can run the “Show Me” demo in two ways:
       </p>
       <p className='font_22_txt fw_400 text-center w-responsive mx-auto '>
-        a)	Sample:  It uses sample profile picture to view the show.
-          User needs select the “Sample profile picture” to “Y” for this scenario.
+        a)	Sample:  Please set “Sample profile picture” to “Y” to run this demo.
       </p>
       <p className='font_22_txt fw_400 text-center w-responsive mx-auto '>
-        b)	User: User needs to upload his/her own profile picture to view the Show.
-          User needs to upload his/her profile picture using  “User profile picture upload” field below.
+        b)	User: Upload your profile picture using “Profile Picture Upload” field to run this demo.
       </p>
       <p className='font_22_txt fw_400 text-center w-responsive mx-auto '>
-          Please leave your feedback using the link below to improve user satisfaction.
-          If you like the show, please open an account. The mobile app will be available soon.
+          Please leave your feedback to improve our application. 
+          If you like the show, please open an account using “person icon” above. The mobile app will be available soon.
       </p>
       <div className={classes.row}>
         <div className={classes.label}>Category</div>
