@@ -7,7 +7,7 @@ import {connect} from 'react-redux';
 import './index.css';
 import SignInDialog from '../modals/signin';
 import ForgotPasswordDialog from '../modals/forgotpasswordModal';
-import { GET_USER, API_LOGIN, API_REGISTER} from '../../redux_helper/constants/action-types';
+import { GET_USER, API_LOGIN, API_REGISTER, OPEN_SIGNIN_MODAL, CLOSE_SIGNIN_MODAL} from '../../redux_helper/constants/action-types';
 import ProfileMenu from './ProfileMenu';
 import MobileMenu from './MobileMenu';
 
@@ -61,7 +61,8 @@ const Header = (props) => {
 
   useEffect(() => {
     props.dispatch({type : GET_USER, payload : ''})
-  }, [])
+    OpenSignModal(props.isOpensignModal)
+  }, [props.isOpensignModal])
 
   const StyledBadge = withStyles((theme) => ({
     badge: {
@@ -75,7 +76,7 @@ const Header = (props) => {
   const onLoginModalCallback = (payload) => {
     if(payload == 'success')
     {
-      OpenSignModal(false)
+      onCloseSignModal()
     }
     else {
       document.location.href = payload
@@ -88,6 +89,12 @@ const Header = (props) => {
   const onRegister = (user) => {
     props.dispatch({type : API_REGISTER, payload : {user : user, callback : onLoginModalCallback}})
   }
+  const onOpenSignModal = () => {
+    props.dispatch({type : OPEN_SIGNIN_MODAL, payload : {}})
+  }
+  const onCloseSignModal = () => {
+    props.dispatch({type : CLOSE_SIGNIN_MODAL, payload : {}})
+  }
 
   return (
     <div className={classes.grow}>
@@ -99,6 +106,7 @@ const Header = (props) => {
               <path className="st0" d="M0,0.96 C0.2,1.05 0.4,0.94 0.5,0.9 C0.7,0.8 0.74,0.87 0.88,0.94 C0.93,0.97 0.94,0.98 0.98,0.97 L1,0.96  L1,0 L0,0 Z"/> 
               </clipPath>
           </svg>
+          
           <Typography className={classes.title} variant="h6" noWrap>
             Apparel 
           </Typography>
@@ -107,12 +115,19 @@ const Header = (props) => {
             <ul className="navbar-nav ml-auto header-link">
                 <li className="nav-item"><a className="nav-link page-scroll" href="/">Home</a></li>
                 {
-                  props.user.id != null && <li className="nav-item"><a className="nav-link page-scroll" href="/apparel">Apparel</a></li>
+                  props.user.id != null && 
+                  <li className="nav-item">
+                    <a className="nav-link page-scroll" href="/apparel">
+                      {
+                        props.user.email == "madhubobba2@gmail.com" ? "Users" : "Apparel"
+                      }
+                    </a>
+                  </li>
                 }
             </ul>
             {
               props.user.id == null ?
-              <IconButton edge="end" onClick={()=> { setErrorMsg(''); OpenSignModal(true);}} >
+              <IconButton edge="end" onClick={()=> { setErrorMsg(''); onOpenSignModal();}} >
                 <ion-icon name="person-outline" style = {{fontSize : 24}}></ion-icon>
               </IconButton>
               :
@@ -125,7 +140,7 @@ const Header = (props) => {
         </Toolbar>
       </AppBar>
       <ForgotPasswordDialog open={open_Forgotmodal}  onClose = {()=>OpenForgotModal(false)}  />
-      <SignInDialog open={open_signmodal} errmsg = {errmsg} openForogtModal={()=>{OpenForgotModal(true); OpenSignModal(false);}} onClose = {()=>OpenSignModal(false)} onLogin={onLogin} onRegister={onRegister}/>
+      <SignInDialog open={open_signmodal} errmsg = {errmsg} openForogtModal={()=>{OpenForgotModal(true); onCloseSignModal();}} onClose = {()=>onCloseSignModal()} onLogin={onLogin} onRegister={onRegister}/>
     </div>
   );
 }
@@ -133,6 +148,7 @@ const Header = (props) => {
 const mapstate_props = (state) => {
   return {
     user : state.userReducer.user,
+    isOpensignModal : state.loadingReducer.isSignModal
   }
 }
 

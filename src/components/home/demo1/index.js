@@ -4,7 +4,9 @@ import { makeStyles } from '@material-ui/core/styles';
 import {TextField, Button, FormControl, Select, Radio, RadioGroup, FormControlLabel} from '@material-ui/core';
 import countryList from 'react-select-country-list'
 import {connect} from 'react-redux';
-import {SHOW_ALERT} from '../../../redux_helper/constants/action-types';
+import {SHOW_LOAD, DISMISS_LOAD, SHOW_ALERT, OPEN_SIGNIN_MODAL} from '../../../redux_helper/constants/action-types';
+import {addFeedback} from '../../../apis/apparel';
+import FeedbackDialogs from '../../modals/feedback';
 
 const useStyles = makeStyles((theme) => ({
   formControl: {
@@ -35,6 +37,7 @@ const Demo1 = (props) => {
   const [err_zipcode, setErrorZip] = useState(false)
   const [err_country, setErrorCountry] = useState(false)
   const [err_email, setErrorEmail] = useState(false)
+  const [open_modal, OpenModal] = useState(false);
 
   const handleChange = (event) => {
     setData({
@@ -119,7 +122,31 @@ const Demo1 = (props) => {
 
     props.showDemo(2, data)
   }
-
+  const onOpenSignModal = () => {
+    props.dispatch({type : OPEN_SIGNIN_MODAL, payload : {}})
+  }
+  const onAddFeedback=(txt)=>{
+    let feedback = {
+      id : "demo-user-" + new Date().getTime(), 
+      date : new Date(),
+      category : "",
+      apparel_type : "",
+      zipcode : "",
+      country : "",
+      email : "",
+      comment : txt
+    }
+    props.dispatch({type : SHOW_LOAD, payload : 'Leaving Your Feedback...'});
+    addFeedback(feedback).then(response => {
+      props.dispatch({type : DISMISS_LOAD, payload : ''});
+      props.dispatch({type : SHOW_ALERT, payload : {type : 'success', msg : 'Your feedback is saved!'}});
+      OpenModal(false)
+    })
+    .catch(err => {
+      props.dispatch({type : DISMISS_LOAD, payload : ''});
+      props.dispatch({type : SHOW_ALERT, payload : {type : 'error', msg : 'Loading apparels Error!'}});
+    })
+  }
 
   return (
     <section className='text-center my-5'>
@@ -127,7 +154,7 @@ const Demo1 = (props) => {
     <div className = "feature_container">
       <h3 className='font_36_txt font-weight-bold text-center ' style={{marginTop : 30}}>Show Me</h3>
       <p className='font_22_txt fw_400 text-center w-responsive mx-auto '>
-      You can run the “Show Me” demo in two ways:
+      You can run the “Show Me” demo in two ways
       </p>
       <p className='font_22_txt fw_400 text-center w-responsive mx-auto '>
         a)	Sample:  Please set “Sample profile picture” to “Y” to run this demo.
@@ -136,8 +163,13 @@ const Demo1 = (props) => {
         b)	User: Upload your profile picture using “Profile Picture Upload” field to run this demo.
       </p>
       <p className='font_22_txt fw_400 text-center w-responsive mx-auto '>
-          Please leave your feedback to improve our application. 
-          If you like the show, please open an account using “person icon” above. The mobile app will be available soon.
+          Please <a style={{textDecorationLine : 'underline', color : '#00f'}} onClick={()=>OpenModal(true)}>leave your feedback</a> to improve our application. 
+      </p>
+      <p className='font_22_txt fw_400 text-center w-responsive mx-auto '>
+          If you like the show, please <a style={{textDecorationLine : 'underline', color : '#00f'}} onClick={()=>onOpenSignModal()}>open an account.</a> The mobile app will be available soon.
+      </p>
+      <p className='font_22_txt fw_400 text-center w-responsive mx-auto '>
+          The mobile app will be available soon.
       </p>
       <div className={classes.row}>
         <div className={classes.label}>Category</div>
@@ -234,6 +266,7 @@ const Demo1 = (props) => {
         <Button onClick={onSubmit} variant="outlined" color="secondary" style={{borderRadius : 24, width : 200}}>Submit</Button>
       </div>
     </div>
+    <FeedbackDialogs open={open_modal} onClose = {()=>OpenModal(false)} onAdd={onAddFeedback}/>
     </section>
   );
 };

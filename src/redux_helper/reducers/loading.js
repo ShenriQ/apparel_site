@@ -1,7 +1,8 @@
-import {SHOW_LOAD, DISMISS_LOAD, SHOW_ALERT, DISMISS_ALERT} from '../constants/action-types';
+import {SHOW_LOAD, DISMISS_LOAD, SHOW_ALERT, DISMISS_ALERT, OPEN_SIGNIN_MODAL, CLOSE_SIGNIN_MODAL} from '../constants/action-types';
 
 const initialState = {
     loading : false, 
+    isSignModal : false,
     msg : '',
     alert_obj : {
         type : 'success',
@@ -13,13 +14,17 @@ const LoadingReducer = (state = initialState, action) => {
     switch(action.type)
     {
         case SHOW_LOAD :
-            return {loading : true, msg : action.payload}
+            return {...state, loading : true, msg : action.payload}
         case DISMISS_LOAD :
-            return {loading : false, msg : ''}
+            return {...state, loading : false, msg : ''}
         case SHOW_ALERT :
-            return {alert_obj : action.payload}
+            return {...state, alert_obj : action.payload}
         case DISMISS_ALERT :
-            return {alert_obj : { type : 'success', msg : '' }}
+            return {...state, alert_obj : { type : 'success', msg : '' }}
+        case OPEN_SIGNIN_MODAL :
+            return {...state, isSignModal : true}
+        case CLOSE_SIGNIN_MODAL :
+            return {...state, isSignModal : false}
         default :
             return state
     }

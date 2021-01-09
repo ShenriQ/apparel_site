@@ -35,7 +35,7 @@ const Apparel = (props) => {
     getApparels()
     if(props.user.photo == '')
     {
-      props.dispatch({type : SHOW_ALERT, payload : {type : 'warning', msg : 'Please upload your profile picture!'}});
+      props.dispatch({type : SHOW_ALERT, payload : {type : 'warning', msg : 'Please upload your valid profile picture to see the apparel images!'}});
     }
   }, [props.user])
 

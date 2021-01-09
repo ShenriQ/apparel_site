@@ -29,3 +29,7 @@ export const updateUserData = (user) => {
 export const getAllUsers = () => {
     return db.collection('users').orderBy('createdAt', 'desc').get().then(response => { return response; })
 }
+
+export const delUserData = (user_id) => {
+    return db.collection('users').doc(user_id).delete().then(response => {return response })
+}

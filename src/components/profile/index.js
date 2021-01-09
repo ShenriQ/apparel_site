@@ -169,7 +169,7 @@ const Profile = (props) => {
     <section className='text-center my-5'>
     <div className = "feature_container">
       <div className="row" style={{width : '100%', justifyContent : 'center'}}>
-        <h2 className='h1-responsive font-weight-bold text-center my-5'>Your Profile</h2>
+        <h2 className='h2-responsive font-weight-bold text-center my-5'>Your Profile</h2>
       </div>
       <div className="row" style={{width : '100%'}}>
         <div className="col-md-6 col-sm-12">

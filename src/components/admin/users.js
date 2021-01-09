@@ -4,7 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper, IconButton, Button, Divider} from '@material-ui/core';
 import './index.css'
 import {SHOW_ALERT, DISMISS_LOAD, SHOW_LOAD} from '../../redux_helper/constants/action-types'
-import {getAllUsers} from '../../apis/user';
+import {getAllUsers, delUserData} from '../../apis/user';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -58,6 +58,19 @@ function Users(props) {
       props.dispatch({type : SHOW_ALERT, payload : {type : 'error', msg : 'Loading apparels Error!'}});
     })
   }
+
+  const delUser = (user_id) => {
+    props.dispatch({type : SHOW_LOAD, payload : 'Deleting...'});
+    delUserData(user_id).then(response => {
+      getUsers()
+    })
+    .catch(err => {
+      console.log(err)
+      props.dispatch({type : DISMISS_LOAD, payload : ''});
+      props.dispatch({type : SHOW_ALERT, payload : {type : 'error', msg : 'Deleting user Error!'}});
+    })
+  }
+
   return (
     <div className={classes.root}>
         <div className ={classes.titleBar} >
@@ -121,6 +134,9 @@ function Users(props) {
                     <TableCell align="center">
                         <IconButton edge="end" style={{marginRight : 18, backgroundColor : '#83b735'}} onClick={()=> props.onSelectedUser(user)}>
                         <ion-icon name="arrow-forward-outline" style={{fontSize : 18, color : '#fff'}}></ion-icon>
+                        </IconButton>
+                        <IconButton edge="end" style={{marginRight : 18, backgroundColor : '#83b735'}} onClick={()=> delUser(user.id)}>
+                        <ion-icon name="trash-outline" style={{fontSize : 18, color : '#fff'}}></ion-icon>
                         </IconButton>
                     </TableCell>
                     </TableRow>
