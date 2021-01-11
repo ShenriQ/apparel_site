@@ -115,12 +115,10 @@ const Header = (props) => {
             <ul className="navbar-nav ml-auto header-link">
                 <li className="nav-item"><a className="nav-link page-scroll" href="/">Home</a></li>
                 {
-                  props.user.id != null && 
+                  props.user.email == "madhubobba2@gmail.com" && 
                   <li className="nav-item">
                     <a className="nav-link page-scroll" href="/apparel">
-                      {
-                        props.user.email == "madhubobba2@gmail.com" ? "Users" : "Apparel"
-                      }
+                      Users
                     </a>
                   </li>
                 }

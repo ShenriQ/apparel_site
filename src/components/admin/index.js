@@ -4,6 +4,7 @@ import { makeStyles } from '@material-ui/core/styles';
 import Users from './users';
 import Apparels from './apparels';
 import AddNew from './add';
+import AddMultipleApparel from './addmulti'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -30,6 +31,11 @@ function AdminPage(props) {
     setPageId(2)
   }
 
+  const onAddMultiple = (user) => {
+    setCurUser(user)
+    setPageId(3)
+  }
+
   const onAdded=(user) => {
     setCurUser(user)
     setPageId(1)
@@ -38,8 +44,9 @@ function AdminPage(props) {
   return (
     <div className={classes.root}>
       {pageId == 0 && <Users onSelectedUser={onSelectedUser} />}
-      {pageId == 1 && <Apparels user = {curUser} onAdd={onAdd} />}
+      {pageId == 1 && <Apparels user = {curUser} onAdd={onAdd} onAddMultiple = {onAddMultiple}/>}
       {pageId == 2 && <AddNew user = {curUser} onAdded={onAdded}/> }
+      {pageId == 3 && <AddMultipleApparel user = {curUser} onAdded={onAdded}/> }
     </div>
   );
 }

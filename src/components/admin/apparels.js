@@ -5,6 +5,7 @@ import {Table, TableBody, TableCell, TableContainer, TableHead, TableRow, Paper,
 import './index.css'
 import {SHOW_ALERT, DISMISS_LOAD, SHOW_LOAD} from '../../redux_helper/constants/action-types'
 import {getUserAllApparels, deleteApparel} from '../../apis/apparel';
+import { storage } from '../../utils/firebase';
 
 
 const useStyles = makeStyles((theme) => ({
@@ -61,6 +62,23 @@ function Apparels(props) {
     })
   }
 
+  // const gets=()=>{
+  //   storage.ref(props.user.id).listAll()
+  //     .then(dir => {
+  //       dir.items.forEach(fileRef => {
+  //         console.log(fileRef.name)
+  //         // this.deleteFile(ref.fullPath, fileRef.name);
+  //       });
+  //       dir.prefixes.forEach(folderRef => {
+  //         console.log(folderRef.fullPath)
+  //         // this.deleteFolderContents(folderRef.fullPath);
+  //       })
+  //     })
+  //     .catch(error => {
+  //       console.log(error);
+  //     });
+  // }
+
   const rmvApparel = (apparel_id) =>{
     props.dispatch({type : SHOW_LOAD, payload : 'Deleting...'});
     deleteApparel(props.user, apparel_id).then(response => {
@@ -86,8 +104,11 @@ function Apparels(props) {
             </div>
         </div>
         <div className="container" style={{marginTop : 24, marginBottom : 24, justifyContent : 'flex-end'}}>
+            <Button onClick={()=>props.onAddMultiple(props.user)} variant="outlined" color="secondary" style={{borderRadius : 24, }}>
+              Add multiple apparels
+            </Button>
             <Button onClick={()=>props.onAdd(props.user)} variant="outlined" color="secondary" style={{borderRadius : 24, }}>
-              Add new apparel
+              Add one apparel
             </Button>
           </div>
           

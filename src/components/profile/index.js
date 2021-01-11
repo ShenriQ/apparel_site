@@ -157,6 +157,7 @@ const Profile = (props) => {
       props.dispatch({type : DISMISS_LOAD, payload : ''});
       props.dispatch({type : SHOW_ALERT, payload : {type : 'success', msg : 'Your profile is updated successfully!'}});
       props.dispatch({type : SET_USER, payload : changed_user});
+      document.location.href = "/apparel"
     })
     .catch(err => {
       console.log(err)
@@ -260,6 +261,9 @@ const Profile = (props) => {
               Update profile
             </Button>
           </div>
+          {/* <div className={classes.row} style={{marginTop : 24, marginBottom : 20}}>
+            <a style={{textDecorationLine : 'underline', color : '#00f'}} href = "\apparel">View Apparel</a>
+          </div> */}
       </div>
     </div>
     <FeedbackDialogs open={open_modal} onClose = {()=>OpenModal(false)} />

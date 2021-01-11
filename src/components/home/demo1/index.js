@@ -165,9 +165,9 @@ const Demo1 = (props) => {
       <p className='font_22_txt fw_400 text-center w-responsive mx-auto '>
           Please <a style={{textDecorationLine : 'underline', color : '#00f'}} onClick={()=>OpenModal(true)}>leave your feedback</a> to improve our application. 
       </p>
-      <p className='font_22_txt fw_400 text-center w-responsive mx-auto '>
+      {/* <p className='font_22_txt fw_400 text-center w-responsive mx-auto '>
           If you like the show, please <a style={{textDecorationLine : 'underline', color : '#00f'}} onClick={()=>onOpenSignModal()}>open an account.</a> The mobile app will be available soon.
-      </p>
+      </p> */}
       <p className='font_22_txt fw_400 text-center w-responsive mx-auto '>
           The mobile app will be available soon.
       </p>
